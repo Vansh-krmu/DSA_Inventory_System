@@ -1,14 +1,13 @@
-    # Inventory list to store product records 
 inventory = [] 
-MAX_PRODUCTS = 100  # Maximum number of products allowed in inventory
-# Function to insert a new product 
+MAX_PRODUCTS = 100
+ 
 def insert_product(): 
     if len(inventory) >= MAX_PRODUCTS: 
         print("Inventory is full. Cannot insert more products. current products:", len(inventory)) 
         return
     sku = input("Enter SKU: ") 
  
-    # Check for duplicate SKU 
+    
     for item in inventory: 
         if item['sku'] == sku: 
             print("Product with this SKU already exists!") 
@@ -27,11 +26,11 @@ def insert_product():
         print("Quantity cannot be negative.") 
         return 
  
- # Create product dictionary and add to inventory 
+  
     product = {'sku': sku, 'name': name, 'quantity': quantity} 
     inventory.append(product) 
     print("Product inserted successfully.") 
-# Function to display inventory 
+
 def display_inventory(): 
     if not inventory: 
         print("Inventory is empty.") 
@@ -88,7 +87,7 @@ def update_quantity():
             except ValueError:
                 print("Invalid input. Quantity must be a number.")
                 return
-# Main program loop 
+
 def main(): 
     while True: 
         print("\nInventory Stock Manager") 
@@ -101,7 +100,7 @@ def main():
         print("7. Update Product Quantity")
 
         print("8. Exit")
-         # Get user choice
+         
         choice = input("Enter your choice (1-8): ") 
         if choice == '1': 
             insert_product() 
@@ -122,5 +121,6 @@ def main():
             break 
         else:
             print("Invalid choice. Please select from 1 to 8.") 
-# Start the program 
+
 main()
+
