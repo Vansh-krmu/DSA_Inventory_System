@@ -1,13 +1,12 @@
 inventory = [] 
-MAX_PRODUCTS = 100
- 
+MAX_PRODUCTS = 100  
+
 def insert_product(): 
     if len(inventory) >= MAX_PRODUCTS: 
         print("Inventory is full. Cannot insert more products. current products:", len(inventory)) 
         return
     sku = input("Enter SKU: ") 
- 
-    
+   
     for item in inventory: 
         if item['sku'] == sku: 
             print("Product with this SKU already exists!") 
@@ -26,11 +25,12 @@ def insert_product():
         print("Quantity cannot be negative.") 
         return 
  
-  
+    # Create product dictionary and add to inventory 
     product = {'sku': sku, 'name': name, 'quantity': quantity} 
     inventory.append(product) 
     print("Product inserted successfully.") 
 
+# Function to display inventory 
 def display_inventory(): 
     if not inventory: 
         print("Inventory is empty.") 
@@ -40,7 +40,8 @@ def display_inventory():
     print("-----------------------------------------------") 
     for item in inventory: 
         print(f"{item['sku']}\t\t{item['name']}\t\t{item['quantity']}") 
-        print()
+    print()
+
 def insert_Nproducts():
     try:
         count = int(input("How many products do you want to add? "))
@@ -51,6 +52,7 @@ def insert_Nproducts():
     for i in range(count):
         print(f"\n--- Product {i+1} ---")
         insert_product()
+
 def Seach_Product_SKU():
     sku = input("Enter SKU to search: ")
     for item in inventory:
@@ -58,12 +60,15 @@ def Seach_Product_SKU():
             print(f"Product found: {item['name']} with quantity {item['quantity']}")
             return
     print("Product not found.")
+
 def Search_Product_Name():
     name = input("Enter Product Name to search: ")
     for item in inventory:
         if item['name'].lower() == name.lower():
             print(f"Product found: SKU {item['sku']} with quantity {item['quantity']}")
             return
+    print("Product not found.")
+
 def Delete_Product():
     sku = input("Enter SKU of the product to delete: ")
     for item in inventory:
@@ -72,6 +77,7 @@ def Delete_Product():
             print("Product deleted successfully.")
             return
     print("Product not found.")
+
 def update_quantity():
     sku = input("Enter SKU of the product to update quantity for: ")
     for item in inventory:
@@ -87,21 +93,66 @@ def update_quantity():
             except ValueError:
                 print("Invalid input. Quantity must be a number.")
                 return
+    print("Product not found.")
 
+# ✅ New Feature 1: Process Sales
+def process_sales():
+    sku = input("Enter SKU of the product to sell: ")
+    for item in inventory:
+        if item['sku'] == sku:
+            try:
+                quantity_sold = int(input("Enter quantity sold: "))
+                if quantity_sold <= 0:
+                    print("Quantity must be greater than 0.")
+                    return
+                if item['quantity'] >= quantity_sold:
+                    item['quantity'] -= quantity_sold
+                    print(f"Sale processed. Remaining stock: {item['quantity']}")
+                else:
+                    print(f"Insufficient stock! Available: {item['quantity']}")
+                return
+            except ValueError:
+                print("Invalid input. Quantity must be a number.")
+                return
+    print("Product not found.")
+
+# ✅ New Feature 2: Identify Zero Stock
+def identify_zero_stock():
+    if not inventory:
+        print("Inventory is empty.")
+        return
+    
+    zero_stock = [item for item in inventory if item['quantity'] == 0]
+    non_zero_stock = [item for item in inventory if item['quantity'] > 0]
+    
+    # Reorder inventory: non-zero first, zero stock last
+    inventory.clear()
+    inventory.extend(non_zero_stock + zero_stock)
+    
+    if zero_stock:
+        print("\n⚠️ Zero Stock Items:")
+        for item in zero_stock:
+            print(f"SKU: {item['sku']}, Name: {item['name']}")
+    else:
+        print("No zero-stock items found.")
+
+# Main program loop 
 def main(): 
     while True: 
         print("\nInventory Stock Manager") 
         print("1. Insert New Product") 
         print("2. Display Inventory") 
         print("3. Insert N Products")
-        print("4. Serch Product by SKU")
+        print("4. Search Product by SKU")
         print("5. Search Product by Name") 
         print("6. Delete Product")
         print("7. Update Product Quantity")
-
-        print("8. Exit")
-         
-        choice = input("Enter your choice (1-8): ") 
+        print("8. Process Sales")       # ✅ Added option
+        print("9. Identify Zero Stock") # ✅ Added option
+        print("10. Exit")
+        
+        # Get user choice
+        choice = input("Enter your choice (1-10): ") 
         if choice == '1': 
             insert_product() 
         elif choice == '2': 
@@ -116,11 +167,15 @@ def main():
             Delete_Product()
         elif choice == '7':
             update_quantity()
-        elif choice == '8': 
+        elif choice == '8':
+            process_sales()
+        elif choice == '9':
+            identify_zero_stock()
+        elif choice == '10': 
             print("Exiting Inventory Manager.") 
             break 
         else:
-            print("Invalid choice. Please select from 1 to 8.") 
+            print("Invalid choice. Please select from 1 to 10.") 
 
+# Start the program 
 main()
-
